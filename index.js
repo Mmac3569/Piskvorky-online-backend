@@ -44,7 +44,7 @@ io.on('connection', (socket) => {
       if (random_queue.length > 0) {
         const randomOpponentsRoom = "room" + random_queue.shift();
         socket.join(randomOpponentsRoom)
-        io.to(randomOpponentsRoom).emit('start', { room: randomOpponentsRoom });
+        io.to(randomOpponentsRoom).emit('start', { room: randomOpponentsRoom, begins: name });
       } else {
         random_queue.push(name);
         socket.join("room" + name);
@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
     pending_invs.delete(data.from)
     const room = "room" + data.from
     socket.join(room)
-    io.to(room).emit('start', { room: room });
+    io.to(room).emit('start', { room: room, begins: data.from });
   });
 
   socket.on('reject', (data) => {
