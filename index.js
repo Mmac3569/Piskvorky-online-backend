@@ -51,8 +51,12 @@ io.on('connection', (socket) => {
       }
     } else {
       if (online_players.has(data.opponent)) {
+        console.log('opponent is online, sending challenge');
+        console.log(getSocketIdByUsername(data.opponent));
+        console.log(io.sockets.sockets.get(getSocketIdByUsername(data.opponent)));
         io.sockets.sockets.get(getSocketIdByUsername(data.opponent)).emit('challenge', { from: name });
       } else {
+        console.log('opponent is not online');
         pending_invs.set(data.opponent, name);
       }
     }
