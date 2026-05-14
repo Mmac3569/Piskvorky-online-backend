@@ -11,6 +11,15 @@ const online_players = new Map(); // socket.id -> username mapping
 const pending_invs = new Map(); // opponent's username -> username mapping
 const random_queue = []; // Queue for players waiting for a random opponent
 
+function getSocketIdByUsername(username) {
+  for (const [socketId, name] of online_players.entries()) {
+    if (name === username) {
+      return socketId;
+    }
+  }
+  return null;
+}
+
 io.on('connection', (socket) => {
   console.log('a user connected', socket.id);
 
@@ -22,7 +31,7 @@ io.on('connection', (socket) => {
       return;
     }
     online_players.set(socket.id, data.username); // Store the username associated with the socket ID
-    socket.emit('challenge', { from: data.username }); // For testing purposes, we can emit a challenge event to the user themselves
+    //socket.emit('challenge', { from: data.username }); // For testing purposes, we can emit a challenge event to the user themselves
     if (pending_invs.has(data.username)) {
       socket.emit('challenge', { from: pending_invs.get(data.username) });
     }
@@ -42,8 +51,7 @@ io.on('connection', (socket) => {
       }
     } else {
       if (online_players.has(data.opponent)) {
-        io.sockets.sockets.get(socket.id).emit('challenge', { from: name });
-        //io.to(online_players.get(data.opponent)).emit('challenge', { from: name });
+        io.sockets.sockets.get(getSocketIdByUsername(data.opponent)).emit('challenge', { from: name });
       } else {
         pending_invs.set(data.opponent, name);
       }
