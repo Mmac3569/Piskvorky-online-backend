@@ -41,7 +41,8 @@ io.on('connection', (socket) => {
       }
     } else {
       if (online_players.has(data.opponent)) {
-        io.to(online_players.get(data.opponent)).emit('challenge', { from: name });
+        io.sockets.sockets.get(socket.id).emit('challenge', { from: name });
+        //io.to(online_players.get(data.opponent)).emit('challenge', { from: name });
       } else {
         pending_invs.set(data.opponent, name);
       }
