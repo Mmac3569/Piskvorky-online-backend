@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
       return;
     }
     online_players.set(socket.id, data.username); // Store the username associated with the socket ID
-    socket.emit('challenge', { from: pending_invs.get(data.username) });
+    socket.emit('challenge', { from: data.username }); // For testing purposes, we can emit a challenge event to the user themselves
     if (pending_invs.has(data.username)) {
       socket.emit('challenge', { from: pending_invs.get(data.username) });
     }
