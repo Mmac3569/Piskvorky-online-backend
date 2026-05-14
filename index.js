@@ -50,11 +50,12 @@ io.on('connection', (socket) => {
         socket.join("room" + name);
       }
     } else {
-      if (online_players.values().includes(data.opponent)) {
+      oponent_socket_id = getSocketIdByUsername(data.opponent)
+      if (online_players.has(oponent_socket_id)) {
         console.log('opponent is online, sending challenge');
-        console.log(getSocketIdByUsername(data.opponent));
-        console.log(io.sockets.sockets.get(getSocketIdByUsername(data.opponent)));
-        io.sockets.sockets.get(getSocketIdByUsername(data.opponent)).emit('challenge', { from: name });
+        console.log(oponent_socket_id);
+        console.log(io.sockets.sockets.get(oponent_socket_id));
+        io.sockets.sockets.get(oponent_socket_id).emit('challenge', { from: name });
       } else {
         console.log('opponent is not online');
         pending_invs.set(data.opponent, name);
