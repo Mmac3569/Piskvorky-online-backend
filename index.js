@@ -50,7 +50,7 @@ io.on('connection', (socket) => {
         socket.join("room" + name);
       }
     } else {
-      if (online_players.has(data.opponent)) {
+      if (online_players.values().includes(data.opponent)) {
         console.log('opponent is online, sending challenge');
         console.log(getSocketIdByUsername(data.opponent));
         console.log(io.sockets.sockets.get(getSocketIdByUsername(data.opponent)));
