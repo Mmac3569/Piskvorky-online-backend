@@ -53,12 +53,12 @@ io.on('connection', (socket) => {
       oponent_socket_id = getSocketIdByUsername(data.opponent)
       if (online_players.has(oponent_socket_id)) {
         console.log('opponent is online, sending challenge');
-        socket.join("room" + name)
         io.sockets.sockets.get(oponent_socket_id).emit('challenge', { from: name });
       } else {
         console.log('opponent is not online');
         pending_invs.set(data.opponent, name);
       }
+      socket.join("room" + name)
     }
   });
 
