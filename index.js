@@ -77,7 +77,7 @@ io.on('connection', (socket) => {
 
   socket.on('move', (data) => {
     console.log('move event received', data);
-    io.to(data.room).emit('move', data)
+    socket.to(data.room).emit('move', data)
   });
 
   socket.on('rematch', (data) => {
