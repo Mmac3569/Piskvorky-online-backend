@@ -41,9 +41,10 @@ io.on('connection', (socket) => {
     let name = online_players.get(socket.id);
     if (data.opponent == '<random>') {
       if (random_queue.length > 0) {
-        const randomOpponentsRoom = "room" + random_queue.shift();
+        const randomOpponent = random_queue.shift();
+        const randomOpponentsRoom = "room" + randomOpponent;
         socket.join(randomOpponentsRoom)
-        io.to(randomOpponentsRoom).emit('start', { room: randomOpponentsRoom, begins: name });
+        io.to(randomOpponentsRoom).emit('start', { room: randomOpponentsRoom, x_player: randomOpponent, o_player: name });
       } else {
         random_queue.push(name);
         socket.join("room" + name);
@@ -65,7 +66,7 @@ io.on('connection', (socket) => {
     pending_invs.delete(data.from)
     const room = "room" + data.from
     socket.join(room)
-    io.to(room).emit('start', { room: room, begins: data.from });
+    io.to(room).emit('start', { room: room, x_player: data.from, o_player: online_players.get(socket.id) });
   });
 
   socket.on('reject', (data) => {
@@ -89,7 +90,7 @@ io.on('connection', (socket) => {
     // Remove the player from the map when they disconnect
     socket.rooms.forEach((room) => {
       io.to(room).emit('opponent_disconnected');
-      io.sockets.adapter.rooms.delete(room) // Remove the room from the adapter's rooms map   
+      io.sockets.adapter.rooms.delete(room) // Remove the room from the adapter's rooms map
     });
     let name = online_players.get(socket.id)
     online_players.delete(socket.id)
