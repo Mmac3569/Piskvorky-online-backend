@@ -80,9 +80,25 @@ io.on('connection', (socket) => {
     socket.to(data.room).emit('move', data)
   });
 
+  socket.on('draw', (data) => {
+    console.log('draw event received', data);
+    socket.to(data.room).emit('draw', data)
+  });
+
+  socket.on('resign', (data) => {
+    console.log('resign event received', data);
+    socket.to(data.room).emit('resign', data)
+  });
+
+  socket.on('leave', (data) => {
+    console.log('user left', socket.id);
+    socket.to(data.room).emit('opponent_left');
+    io.sockets.adapter.rooms.delete(data.room); // Remove the room from the adapter's rooms map
+  });
+
   socket.on('rematch', (data) => {
-    // Will not be implemented for now
     console.log('rematch event received', data);
+    socket.to(data.room).emit('rematch', data);
   });
 
   socket.on('disconnect', () => {
